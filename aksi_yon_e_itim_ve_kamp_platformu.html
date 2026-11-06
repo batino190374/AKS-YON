@@ -1,0 +1,940 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AKSİYON - Eğitim ve Kamp Platformu</title>
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="flex min-h-screen bg-[#0F0913] text-purple-100 font-sans" id="body-theme">
+
+    <!-- 2 ADIMLI GİRİŞ MODALI -->
+    <div id="auth-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-4">
+        <div class="bg-[#160D20] border border-purple-500/30 rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl space-y-5">
+            <div class="text-center space-y-2">
+                <div class="w-14 h-14 bg-gradient-to-tr from-purple-600 to-fuchsia-500 rounded-2xl mx-auto flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-purple-600/40">
+                    AK
+                </div>
+                <h2 class="text-2xl font-black text-white" id="auth-title">AKSİYON'a Hoş Geldin!</h2>
+                <p class="text-xs text-purple-300/70 font-semibold" id="auth-subtitle">1. Adım: Bilgilerini gir ve devam et.</p>
+            </div>
+
+            <form id="profile-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+                <!-- 1. ADIM -->
+                <div id="step-1" class="space-y-4 transition-all duration-300">
+                    <div>
+                        <label class="block text-xs font-bold text-purple-300 mb-1">Adın veya Rumuzun</label>
+                        <input type="text" id="username-input" required placeholder="Örn: Yağız" class="w-full bg-[#100818] border border-purple-800/60 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-fuchsia-500 font-semibold">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-purple-300 mb-1">Sınıfın</label>
+                        <select id="grade-input" class="w-full bg-[#100818] border border-purple-800/60 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-fuchsia-500 font-semibold">
+                            <option value="5. Sınıf">5. Sınıf</option>
+                            <option value="6. Sınıf" selected>6. Sınıf</option>
+                            <option value="7. Sınıf">7. Sınıf</option>
+                            <option value="8. Sınıf">8. Sınıf</option>
+                        </select>
+                    </div>
+
+                    <button type="button" onclick="goToStep2()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white font-extrabold text-sm shadow-lg shadow-purple-600/40 transition-all hover:scale-[1.01] cursor-pointer">
+                        Devam Et ➔
+                    </button>
+                </div>
+
+                <!-- 2. ADIM -->
+                <div id="step-2" class="hidden space-y-4 transition-all duration-300">
+                    <div>
+                        <label class="block text-xs font-bold text-purple-300 mb-2">2. Adım: Tema ve Profil Rengi Seç</label>
+                        <div class="grid grid-cols-4 gap-2.5">
+                            <label class="cursor-pointer flex flex-col items-center gap-1 group">
+                                <input type="radio" name="theme-choice" value="purple" checked class="sr-only peer">
+                                <div class="w-full h-9 rounded-xl bg-gradient-to-tr from-purple-700 to-fuchsia-600 border-2 border-transparent peer-checked:border-white shadow-md transition-transform group-hover:scale-105 flex items-center justify-center text-white text-xs font-bold">Mor</div>
+                                <span class="text-[10px] text-purple-300 font-semibold">Mor</span>
+                            </label>
+                            <label class="cursor-pointer flex flex-col items-center gap-1 group">
+                                <input type="radio" name="theme-choice" value="blue" class="sr-only peer">
+                                <div class="w-full h-9 rounded-xl bg-gradient-to-tr from-blue-700 to-cyan-500 border-2 border-transparent peer-checked:border-white shadow-md transition-transform group-hover:scale-105 flex items-center justify-center text-white text-xs font-bold">Mavi</div>
+                                <span class="text-[10px] text-purple-300 font-semibold">Mavi</span>
+                            </label>
+                            <label class="cursor-pointer flex flex-col items-center gap-1 group">
+                                <input type="radio" name="theme-choice" value="emerald" class="sr-only peer">
+                                <div class="w-full h-9 rounded-xl bg-gradient-to-tr from-emerald-700 to-teal-500 border-2 border-transparent peer-checked:border-white shadow-md transition-transform group-hover:scale-105 flex items-center justify-center text-white text-xs font-bold">Yeşil</div>
+                                <span class="text-[10px] text-purple-300 font-semibold">Yeşil</span>
+                            </label>
+                            <label class="cursor-pointer flex flex-col items-center gap-1 group">
+                                <input type="radio" name="theme-choice" value="amber" class="sr-only peer">
+                                <div class="w-full h-9 rounded-xl bg-gradient-to-tr from-amber-600 to-orange-500 border-2 border-transparent peer-checked:border-white shadow-md transition-transform group-hover:scale-105 flex items-center justify-center text-white text-xs font-bold">Turuncu</div>
+                                <span class="text-[10px] text-purple-300 font-semibold">Turuncu</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2 pt-2">
+                        <button type="button" onclick="goToStep1()" class="w-1/3 py-3.5 rounded-xl bg-purple-950 hover:bg-purple-900 text-purple-200 font-extrabold text-xs cursor-pointer">
+                            Geri
+                        </button>
+                        <button type="submit" class="w-2/3 py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white font-extrabold text-sm shadow-lg shadow-purple-600/40 cursor-pointer">
+                            Kayıt Ol ve Başla 🚀
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- SOL DİKEY KALIN VE GENİŞLETİLMİŞ MENÜ (Yazılar Görünür) -->
+    <aside id="sidebar" class="w-64 bg-[#130B1A] border-r border-purple-900/40 flex flex-col py-6 px-4 justify-between flex-shrink-0 z-40">
+        <div class="space-y-8">
+            <div class="flex items-center gap-3 px-2">
+                <div id="sidebar-logo-box" class="w-10 h-10 bg-gradient-to-tr from-purple-700 to-fuchsia-600 rounded-xl flex items-center justify-center text-white text-lg font-black tracking-tighter shadow-lg shadow-purple-600/40 flex-shrink-0">
+                    AK
+                </div>
+                <div>
+                    <h2 class="text-sm font-black text-white tracking-wide">AKSİYON</h2>
+                    <p class="text-[10px] text-purple-400 font-bold">Eğitim Platformu</p>
+                </div>
+            </div>
+
+            <nav class="flex flex-col space-y-2">
+                <button type="button" onclick="switchView('home')" id="nav-home-btn" class="nav-btn w-full flex items-center gap-3.5 px-3.5 py-3 rounded-2xl text-fuchsia-400 bg-purple-950/60 border border-purple-800/40 transition-all font-bold text-xs cursor-pointer shadow-sm">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    <span class="truncate">Ana Ekran</span>
+                </button>
+                <button type="button" onclick="switchView('courses')" id="nav-courses-btn" class="nav-btn w-full flex items-center gap-3.5 px-3.5 py-3 rounded-2xl text-purple-300/70 hover:text-white hover:bg-purple-900/40 transition-all font-bold text-xs cursor-pointer">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    <span class="truncate">Dersler</span>
+                </button>
+                <button type="button" onclick="switchView('calendar')" id="nav-calendar-btn" class="nav-btn w-full flex items-center gap-3.5 px-3.5 py-3 rounded-2xl text-purple-300/70 hover:text-white hover:bg-purple-900/40 transition-all font-bold text-xs cursor-pointer">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <span class="truncate">Takvim</span>
+                </button>
+                <button type="button" onclick="switchView('exams')" id="nav-exams-btn" class="nav-btn w-full flex items-center gap-3.5 px-3.5 py-3 rounded-2xl text-purple-300/70 hover:text-white hover:bg-purple-900/40 transition-all font-bold text-xs cursor-pointer">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    <span class="truncate">Sınavlar</span>
+                </button>
+                <button type="button" onclick="switchView('ai')" id="nav-ai-btn" class="nav-btn w-full flex items-center gap-3.5 px-3.5 py-3 rounded-2xl text-purple-300/70 hover:text-white hover:bg-purple-900/40 transition-all font-bold text-xs cursor-pointer">
+                    <svg class="w-5 h-5 flex-shrink-0 text-fuchsia-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <span class="truncate">AI Asistan ⚡</span>
+                </button>
+            </nav>
+        </div>
+
+        <div class="flex flex-col space-y-3 pt-4 border-t border-purple-900/40">
+            <button type="button" onclick="switchView('settings')" id="nav-settings-btn" class="nav-btn w-full flex items-center gap-3.5 px-3.5 py-3 rounded-2xl text-purple-300/70 hover:text-white hover:bg-purple-900/40 transition-all font-bold text-xs cursor-pointer">
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                <span class="truncate">Ayarlar</span>
+            </button>
+            <div class="flex items-center gap-3 px-2 py-2 rounded-2xl bg-purple-950/40 border border-purple-900/50">
+                <div id="user-avatar-badge" class="w-9 h-9 rounded-xl bg-purple-950 border border-purple-800/60 flex items-center justify-center text-base shadow-md flex-shrink-0">
+                    🐼
+                </div>
+                <div class="overflow-hidden">
+                    <p class="text-xs font-bold text-white truncate" id="sidebar-username">Yağız</p>
+                    <p class="text-[10px] text-purple-400 font-semibold" id="sidebar-grade-text">6. Sınıf</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ANA İÇERİK ALANI -->
+    <main class="flex-1 overflow-y-auto p-6 md:p-10 space-y-8">
+
+        <!-- 1. ANA EKRAN -->
+        <div id="view-home" class="space-y-8">
+            <div class="bg-gradient-to-r from-purple-900/40 via-[#170E21] to-purple-950/50 border border-purple-800/40 rounded-3xl p-6 md:p-8 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                <div class="space-y-2">
+                    <div class="inline-flex items-center gap-2 bg-purple-950/80 px-3 py-1 rounded-full border border-purple-800/50 text-xs font-bold text-fuchsia-300">
+                        ⚡ <span id="display-grade">6. Sınıf</span> Kampı Aktif
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-black text-white tracking-tight">
+                        Harika gidiyorsun, <span id="welcome-username" class="text-fuchsia-400">Yağız.</span>
+                    </h1>
+                    <p class="text-xs md:text-sm text-purple-300/70 font-medium">Bugünkü ders hedeflerini tamamla, serini bozma ve zirveye yaklaş!</p>
+                </div>
+                <div id="countdown-badge" class="bg-gradient-to-r from-purple-700 via-fuchsia-600 to-purple-700 text-white font-extrabold px-5 py-2.5 rounded-2xl shadow-lg text-sm flex items-center gap-2">
+                    🔥 <span>Günlük Seri: <strong id="streak-count" class="text-white">5</strong> Gün</span>
+                    <button type="button" onclick="increaseStreak()" id="streak-plus-btn" class="ml-2 bg-purple-900/60 hover:bg-purple-800 text-white font-black text-xs px-3 py-1.5 rounded-xl shadow-md transition-all hover:scale-105 flex items-center gap-1 cursor-pointer">
+                        + 1 Ekle
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. TAKVİM -->
+        <div id="view-calendar" class="hidden space-y-6">
+            <h1 class="text-2xl font-black text-white flex items-center gap-2">
+                📅 Takvim ve Ders Programı
+            </h1>
+            <div class="bg-[#170E21] border border-purple-900/40 rounded-3xl p-6 shadow-xl space-y-4">
+                <h2 class="text-lg font-black text-white">Kasım 2026 Takvimi Aktif</h2>
+                <p class="text-xs text-purple-300">Günlük ders çalışma programlarını buradan takip edebilirsin.</p>
+            </div>
+        </div>
+
+        <!-- 3. DERSLER -->
+        <div id="view-courses" class="hidden space-y-6">
+            <div class="flex flex-col gap-1">
+                <span class="text-xs font-bold text-fuchsia-400 tracking-wider uppercase" id="courses-title-grade">6. Sınıf Müfredatı</span>
+                <h1 class="text-2xl md:text-3xl font-black text-white">Dersler ve Konu Kampı</h1>
+                <p class="text-xs text-purple-300/70">Bir derse tıklayarak konuları, takvimi ve video dersleri inceleyebilirsin.</p>
+            </div>
+            <div id="courses-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+        </div>
+
+        <!-- DERS DETAY MODALI (FRAME) -->
+        <div id="course-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-md p-2 md:p-6">
+            <div class="bg-[#160D20] border border-purple-500/30 rounded-3xl w-full h-full max-w-[98vw] max-h-[96vh] flex flex-col p-4 md:p-6 shadow-2xl overflow-hidden">
+                <div class="flex items-center justify-between border-b border-purple-900/50 pb-3 flex-shrink-0">
+                    <div class="flex items-center gap-3">
+                        <div id="modal-course-icon" class="w-10 h-10 rounded-2xl bg-purple-900/50 flex items-center justify-center text-xl font-bold">📐</div>
+                        <div>
+                            <h2 id="modal-course-title" class="text-xl font-black text-white">Matematik</h2>
+                            <p id="modal-course-subtitle" class="text-[11px] text-purple-300/70 font-semibold">AKSİYON Özel Yerli Video Ders & Tam Ekran Kamp Çerçevesi</p>
+                        </div>
+                    </div>
+                    <button type="button" onclick="closeCourseModal()" class="w-9 h-9 rounded-xl bg-purple-950 hover:bg-purple-900 text-white font-bold flex items-center justify-center cursor-pointer">✕</button>
+                </div>
+
+                <!-- ÖZEL KENDİ FRAME'İMİZ (YAN YANA YOUTUBE TARZI TAM EKRAN DÜZENİ) -->
+                <div class="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6 pt-4 overflow-y-auto">
+                    <!-- Sol & Orta: Özel Video Oynatıcı Frame'i (2 Kolon) -->
+                    <div class="lg:col-span-2 flex flex-col space-y-4">
+                        <!-- Video Ekranı / Canvas / Simülasyon Frame'i -->
+                        <div id="custom-video-container" class="relative w-full flex-1 min-h-[380px] md:min-h-[500px] bg-[#0A0510] rounded-2xl overflow-hidden border border-purple-900/60 shadow-2xl flex flex-col items-center justify-between group">
+                            <!-- Video Arka Plan / Animasyon Alanı -->
+                            <div class="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-tr from-[#12071d] via-[#1a0c2b] to-[#0a0510]">
+                                <div id="custom-video-bg-icon" class="text-7xl md:text-8xl mb-4 animate-pulse">📐</div>
+                                <h3 id="custom-video-title-display" class="text-xl md:text-2xl font-black text-white text-center px-4">Ders Konusu Yükleniyor...</h3>
+                                <p class="text-xs text-amber-400 mt-2 font-semibold">AKSİYON Orijinal Video Oynatıcı</p>
+                            </div>
+
+                            <!-- OYNATICI KONTROL PANELİ (GÖRSELE BİREBİR UYGUN TURUNCU DİZAYN) -->
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/95 via-black/80 to-transparent px-4 py-3 flex items-center gap-3 z-10 text-white rounded-b-2xl select-none">
+                                
+                                <!-- Turuncu Halka Oynat/Duraklat Butonu -->
+                                <button type="button" onclick="togglePlayPause()" id="play-pause-btn" class="w-10 h-10 rounded-full bg-[#C25808] hover:bg-[#D9650A] border-2 border-[#E87813] flex items-center justify-center text-white text-base font-black shadow-lg cursor-pointer flex-shrink-0 transition-transform active:scale-95">
+                                    ⏸
+                                </button>
+
+                                <!-- 10 Saniye Geri -->
+                                <button type="button" onclick="skipVideo(-10)" title="10 Saniye Geri" class="w-8 h-8 flex items-center justify-center text-purple-200 hover:text-white transition-colors cursor-pointer text-xs font-bold flex-shrink-0">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0019 16V8a1 1 0 00-1.6-.8l-5.334 4zM4.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0011 16V8a1 1 0 00-1.6-.8L4.066 11.2z"></path></svg>
+                                </button>
+
+                                <!-- 10 Saniye İleri -->
+                                <button type="button" onclick="skipVideo(10)" title="10 Saniye İleri" class="w-8 h-8 flex items-center justify-center text-purple-200 hover:text-white transition-colors cursor-pointer text-xs font-bold flex-shrink-0">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.934 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.334-4zM19.934 12.8a1 1 0 000-1.6l-5.334-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.334-4z"></path></svg>
+                                </button>
+
+                                <!-- Turuncu İlerleme Çubuğu (SeekBar) -->
+                                <div class="flex-1 px-1 flex items-center cursor-pointer py-2 group" onclick="seekVideo(event)">
+                                    <div class="w-full bg-gray-600/80 h-1.5 rounded-full relative flex items-center overflow-visible">
+                                        <!-- Turuncu Dolgu -->
+                                        <div id="video-progress-bar" class="h-full bg-[#C25808] rounded-full" style="width: 28.5%;"></div>
+                                        <!-- Yuvarlak Beyaz Sürükleme Noktası -->
+                                        <div id="video-progress-thumb" class="w-3.5 h-3.5 bg-white border-2 border-[#C25808] rounded-full shadow-md -ml-1.5 flex-shrink-0 group-hover:scale-125 transition-transform"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Zaman Sayacı -->
+                                <span id="video-time-indicator" class="text-xs font-extrabold tracking-wide text-gray-100 flex-shrink-0 whitespace-nowrap">
+                                    14:22 / 50:21
+                                </span>
+
+                                <!-- Ses Kontrolü -->
+                                <button type="button" onclick="toggleMute()" id="mute-btn" title="Ses" class="w-7 h-7 flex items-center justify-center text-gray-200 hover:text-white cursor-pointer flex-shrink-0">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+                                </button>
+
+                                <!-- Hız Seçeneği (1x) -->
+                                <button type="button" onclick="cyclePlaybackRate()" id="speed-btn" class="px-1.5 py-0.5 rounded text-xs font-black text-gray-200 hover:text-white hover:bg-white/10 cursor-pointer flex-shrink-0">
+                                    1x
+                                </button>
+
+                                <!-- Tam Ekran Butonu -->
+                                <button type="button" onclick="toggleCustomFullscreen()" title="Tam Ekran" class="w-7 h-7 flex items-center justify-center text-gray-200 hover:text-white cursor-pointer flex-shrink-0">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sağ Sütun: Önerilen Videolar ve Ünite Konuları Widget'ı -->
+                    <div class="space-y-4 flex flex-col overflow-y-auto pr-1">
+                        <!-- Ünite Konuları ve Kamp Programı Widget'ı -->
+                        <div class="bg-[#100818] border border-purple-900/50 rounded-2xl p-4 space-y-3 flex-shrink-0">
+                            <h4 class="text-xs font-bold text-fuchsia-400 uppercase tracking-wider flex items-center gap-2">📚 Ünite Konuları & Kamp</h4>
+                            <div id="modal-topics-list" class="space-y-2 text-xs text-purple-200 max-h-[220px] overflow-y-auto pr-1">
+                                <!-- Dinamik konular buraya dolacak -->
+                            </div>
+                        </div>
+
+                        <!-- Önerilen Kamp Videoları -->
+                        <div class="bg-[#100818] border border-purple-900/50 rounded-2xl p-4 space-y-3 flex-shrink-0">
+                            <h4 class="text-xs font-bold text-fuchsia-400 uppercase tracking-wider flex items-center gap-2">📺 Önerilen Kamp Videoları</h4>
+                            <div id="modal-video-playlist" class="space-y-2.5 max-h-[220px] overflow-y-auto pr-1">
+                                <!-- Dinamik video önerileri buraya dolacak -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. SINAVLAR -->
+        <div id="view-exams" class="hidden space-y-6">
+            <h1 class="text-2xl font-black text-white flex items-center gap-2">
+                📝 Sınavlar ve Yazılı Kağıtları
+            </h1>
+            <div class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-purple-900/40">
+                <button type="button" onclick="filterExamSubject('Matematik')" id="exam-tab-Matematik" class="exam-tab-btn px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white font-extrabold text-xs shadow-md whitespace-nowrap cursor-pointer">Matematik</button>
+                <button type="button" onclick="filterExamSubject('Fen Bilimleri')" id="exam-tab-Fen Bilimleri" class="exam-tab-btn px-4 py-2 rounded-xl bg-[#1A1025] text-purple-300 font-bold text-xs border border-purple-900/60 whitespace-nowrap cursor-pointer">Fen Bilimleri</button>
+                <button type="button" onclick="filterExamSubject('Türkçe')" id="exam-tab-Türkçe" class="exam-tab-btn px-4 py-2 rounded-xl bg-[#1A1025] text-purple-300 font-bold text-xs border border-purple-900/60 whitespace-nowrap cursor-pointer">Türkçe</button>
+                <button type="button" onclick="filterExamSubject('Sosyal Bilgiler')" id="exam-tab-Sosyal Bilgiler" class="exam-tab-btn px-4 py-2 rounded-xl bg-[#1A1025] text-purple-300 font-bold text-xs border border-purple-900/60 whitespace-nowrap cursor-pointer">Sosyal Bilgiler</button>
+                <button type="button" onclick="filterExamSubject('İngilizce')" id="exam-tab-İngilizce" class="exam-tab-btn px-4 py-2 rounded-xl bg-[#1A1025] text-purple-300 font-bold text-xs border border-purple-900/60 whitespace-nowrap cursor-pointer">İngilizce</button>
+                <button type="button" onclick="filterExamSubject('Din Kültürü')" id="exam-tab-Din Kültürü" class="exam-tab-btn px-4 py-2 rounded-xl bg-[#1A1025] text-purple-300 font-bold text-xs border border-purple-900/60 whitespace-nowrap cursor-pointer">Din Kültürü</button>
+            </div>
+            <div id="exams-container" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+        </div>
+
+        <!-- 5. AYARLAR -->
+        <div id="view-settings" class="hidden space-y-6">
+            <h1 class="text-2xl font-black text-white flex items-center gap-2">
+                ⚙️ Ayarlar ve Profil
+            </h1>
+            <div class="bg-[#170E21] border border-purple-900/40 rounded-3xl p-6 shadow-xl space-y-4 max-w-xl">
+                <h2 class="text-base font-black text-white">Profil ve Tema Düzenle</h2>
+                <div class="flex items-center gap-4 py-2">
+                    <div id="settings-avatar-preview" class="w-14 h-14 rounded-2xl bg-purple-950 border border-purple-800 flex items-center justify-center text-2xl">🐼</div>
+                    <div class="flex gap-2">
+                        <button type="button" onclick="changeAvatar('🐼')" class="w-9 h-9 rounded-xl bg-purple-900/40 hover:bg-purple-800 flex items-center justify-center text-lg cursor-pointer">🐼</button>
+                        <button type="button" onclick="changeAvatar('🦁')" class="w-9 h-9 rounded-xl bg-purple-900/40 hover:bg-purple-800 flex items-center justify-center text-lg cursor-pointer">🦁</button>
+                        <button type="button" onclick="changeAvatar('🚀')" class="w-9 h-9 rounded-xl bg-purple-900/40 hover:bg-purple-800 flex items-center justify-center text-lg cursor-pointer">🚀</button>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-purple-300 mb-1">Rumuz</label>
+                    <input type="text" id="settings-username-input" value="Yağız" class="w-full bg-[#100818] border border-purple-800/60 rounded-xl px-4 py-2.5 text-sm text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-purple-300 mb-1">Sınıf</label>
+                    <select id="settings-grade-input" class="w-full bg-[#100818] border border-purple-800/60 rounded-xl px-4 py-2.5 text-sm text-white">
+                        <option value="5. Sınıf">5. Sınıf</option>
+                        <option value="6. Sınıf">6. Sınıf</option>
+                        <option value="7. Sınıf">7. Sınıf</option>
+                        <option value="8. Sınıf">8. Sınıf</option>
+                    </select>
+                </div>
+                <button type="button" onclick="saveSettingsProfile()" class="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white font-extrabold text-xs cursor-pointer">Buluta Kaydet ☁️</button>
+            </div>
+        </div>
+
+        <!-- 6. GOOGLE AI ASİSTAN EKRANI -->
+        <div id="view-ai" class="hidden space-y-6 h-full flex flex-col">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-black text-white flex items-center gap-2">
+                        ⚡ Google AI Eğitim Koçu
+                    </h1>
+                    <p class="text-xs text-purple-300/70">Google Gemini altyapısıyla derslerin hakkında sorular sor, özet al ve rehberlik al.</p>
+                </div>
+            </div>
+
+            <div class="bg-[#170E21] border border-purple-900/40 rounded-3xl p-6 shadow-xl flex flex-col h-[70vh] justify-between">
+                <!-- Sohbet Mesaj Alanı -->
+                <div id="ai-chat-messages" class="flex-1 overflow-y-auto space-y-4 pr-2">
+                    <div class="flex items-start gap-3">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 to-fuchsia-500 flex items-center justify-center text-white text-base font-bold shadow-md flex-shrink-0">🤖</div>
+                        <div class="bg-[#130B1A] border border-purple-800/50 rounded-2xl p-4 max-w-xl text-xs md:text-sm text-purple-100 leading-relaxed shadow-inner">
+                            Merhaba! Ben senin Google AI tabanlı eğitim koçunum. Hangi derste zorlanıyorsun veya hangi konuda özet istiyorsun? Bana hemen sor! 🚀
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Soru Gönderme Alanı -->
+                <div class="pt-4 border-t border-purple-900/40 flex gap-2">
+                    <input type="text" id="ai-prompt-input" placeholder="Örn: Çarpanlar ve katlar konusunu 3 maddede özetle..." class="flex-1 bg-[#100818] border border-purple-800/60 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-fuchsia-500 font-medium" onkeydown="if(event.key==='Enter') sendAIPrompt()">
+                    <button type="button" onclick="sendAIPrompt()" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white font-extrabold text-sm shadow-lg shadow-purple-600/40 cursor-pointer flex-shrink-0 transition-all">
+                        Gönder 🚀
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FIREBASE BULUT VERİTABANI VE UYGULAMA SCRIPT -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global Firebase ve Uygulama Değişkenleri
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "demo", authDomain: "demo.firebaseapp.com", projectId: "demo" };
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'aksiyon-app';
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let currentActiveCourseId = null;
+        let currentGrade = '6. Sınıf';
+        let currentAvatar = '🐼';
+        let lastStreakDate = '';
+        let isPlaying = true;
+        let playbackSpeed = 1;
+        let isMuted = false;
+        let currentSeconds = 862;
+        let totalSeconds = 3021;
+
+        const classCourses = {
+            '5. Sınıf': [
+                { id: 'mat', name: 'Matematik', icon: '📐', topics: ['Doğal Sayılarla İşlemler', 'Çarpanlar ve Katlar', 'Kümeler', 'Kesirler'], color: 'from-purple-700 to-fuchsia-600', progress: 40, textColor: 'text-fuchsia-400', playlist: [
+                    { title: '1. Dönem 1. Yazılıya Hazırlık', duration: '18:20', views: '158 B' },
+                    { title: 'Doğal Sayılarla İşlemler Tekrarı', duration: '12:45', views: '45 B' },
+                    { title: 'Yeni Nesil Soru Çözümleri', duration: '22:10', views: '92 B' }
+                ]},
+                { id: 'tur', name: 'Türkçe', icon: '📖', topics: ['Sözcükte Anlam', 'Cümlede Anlam', 'Paragraf Taktikleri', 'Yazım Kuralları'], color: 'from-blue-700 to-cyan-600', progress: 55, textColor: 'text-cyan-400', playlist: [
+                    { title: 'Sözcükte Anlam Full Tekrar', duration: '14:10', views: '64 B' },
+                    { title: 'Paragraf Taktikleri Kampı', duration: '25:00', views: '110 B' }
+                ]},
+                { id: 'fen', name: 'Fen Bilimleri', icon: '🔬', topics: ['Güneş, Dünya ve Ay', 'Vücudumuzdaki Sistemler', 'Kuvvet ve Hareket'], color: 'from-emerald-700 to-teal-600', progress: 50, textColor: 'text-emerald-400', playlist: [
+                    { title: 'Güneş, Dünya ve Ay Konu Anlatımı', duration: '16:30', views: '89 B' }
+                ]},
+                { id: 'sos', name: 'Sosyal Bilgiler', icon: '🌍', topics: ['Birey ve Toplum', 'Kültür ve Miras', 'İnsanlar ve Yerler'], color: 'from-amber-600 to-orange-600', progress: 35, textColor: 'text-amber-400', playlist: [
+                    { title: 'Birey ve Toplum Ünite Özeti', duration: '19:40', views: '52 B' }
+                ]}
+            ],
+            '6. Sınıf': [
+                { id: 'mat', name: 'Matematik', icon: '📐', topics: ['Doğal Sayılarla İşlemler', 'Çarpanlar ve Katlar', 'Kümeler', 'Ondalık Gösterimler', 'Oran'], color: 'from-purple-700 to-fuchsia-600', progress: 45, textColor: 'text-fuchsia-400', playlist: [
+                    { title: '6. Sınıf Matematik 1. Dönem 1. Yazılı', duration: '18:15', views: '158 B' },
+                    { title: 'Çarpanlar ve Katlar Soru Kampı', duration: '21:40', views: '88 B' },
+                    { title: 'Kümeler Nokta Atışı Sorular', duration: '15:10', views: '41 B' }
+                ]},
+                { id: 'tur', name: 'Türkçe', icon: '📖', topics: ['Sözcükte Anlam', 'Paragraf Taktikleri', 'İsimler (Adlar)', 'Zamirler'], color: 'from-blue-700 to-cyan-600', progress: 60, textColor: 'text-cyan-400', playlist: [
+                    { title: 'Türkçe 1. Yazılıya Hazırlık Kampı', duration: '20:00', views: '124 B' },
+                    { title: 'İsimler ve Zamirler Pratik', duration: '13:50', views: '67 B' }
+                ]},
+                { id: 'fen', name: 'Fen Bilimleri', icon: '🔬', topics: ['Güneş Sistemi ve Tutulmalar', 'Vücudumuzdaki Sistemler', 'Kuvvet ve Hareket', 'Madde ve Isı'], color: 'from-emerald-700 to-teal-600', progress: 30, textColor: 'text-emerald-400', playlist: [
+                    { title: 'Güneş Sistemi ve Tutulmalar', duration: '19:20', views: '95 B' },
+                    { title: 'Vücudumuzdaki Sistemler Özet', duration: '24:10', views: '140 B' }
+                ]},
+                { id: 'sos', name: 'Sosyal Bilgiler', icon: '🌍', topics: ['Birlikte Yaşamak', 'Tarih Boyunca Türkler', 'Yeryüzünde Yaşam'], color: 'from-amber-600 to-orange-600', progress: 50, textColor: 'text-amber-400', playlist: [
+                    { title: 'Sosyal Bilgiler Yazılı Kampı', duration: '17:30', views: '73 B' }
+                ]},
+                { id: 'din', name: 'Din Kültürü', icon: '🕌', topics: ['Peygamberler ve İlahi Kitaplar', 'Nezaket ve Görgü', 'İslam ve Temizlik'], color: 'from-rose-700 to-pink-600', progress: 25, textColor: 'text-rose-400', playlist: [
+                    { title: 'Din Kültürü 1. Yazılı Tekrarı', duration: '14:00', views: '55 B' }
+                ]},
+                { id: 'ing', name: 'İngilizce', icon: '🗣️', topics: ['Life', 'Yummy Breakfast', 'Downtown', 'Weather and Emotions'], color: 'from-indigo-700 to-blue-600', progress: 75, textColor: 'text-indigo-400', playlist: [
+                    { title: 'Unit 1-2 Vocabulary & Skills', duration: '15:45', views: '82 B' }
+                ]}
+            ],
+            '7. Sınıf': [
+                { id: 'mat', name: 'Matematik', icon: '📐', topics: ['Tam Sayılarla İşlemler', 'Rasyonel Sayılar', 'Cebirsel İfadeler'], color: 'from-purple-700 to-fuchsia-600', progress: 40, textColor: 'text-fuchsia-400', playlist: [
+                    { title: '7. Sınıf Matematik Yazılı Kampı', duration: '22:00', views: '98 B' }
+                ]},
+                { id: 'tur', name: 'Türkçe', icon: '📖', topics: ['Fiiller', 'Ek Fiil', 'Zarflar', 'Anlam Bilgisi'], color: 'from-blue-700 to-cyan-600', progress: 50, textColor: 'text-cyan-400', playlist: [
+                    { title: 'Fiiller ve Ek Fiil Konu Anlatımı', duration: '16:50', views: '71 B' }
+                ]},
+                { id: 'fen', name: 'Fen Bilimleri', icon: '🔬', topics: ['Güneş Sistemi ve Ötesi', 'Hücre ve Bölünmeler', 'Kuvvet ve Enerji'], color: 'from-emerald-700 to-teal-600', progress: 45, textColor: 'text-emerald-400', playlist: [
+                    { title: 'Hücre ve Bölünmeler Kampı', duration: '18:30', views: '84 B' }
+                ]}
+            ],
+            '8. Sınıf': [
+                { id: 'mat', name: 'Matematik (LGS)', icon: '📐', topics: ['Çarpanlar ve Katlar', 'Üslü İfadeler', 'Kareköklü İfadeler', 'Veri Analizi'], color: 'from-purple-700 to-fuchsia-600', progress: 80, textColor: 'text-fuchsia-400', playlist: [
+                    { title: 'LGS Matematik Sezon Kampı', duration: '28:10', views: '240 B' },
+                    { title: 'Üslü İfadeler Yeni Nesil Soru', duration: '19:30', views: '165 B' }
+                ]},
+                { id: 'tur', name: 'Türkçe (LGS)', icon: '📖', topics: ['Fiilimsiler', 'Cümlenin Ögeleri', 'Yazım Kuralları', 'Sözel Mantık'], color: 'from-blue-700 to-cyan-600', progress: 70, textColor: 'text-cyan-400', playlist: [
+                    { title: 'LGS Sözel Mantık Taktikleri', duration: '24:00', views: '210 B' }
+                ]},
+                { id: 'fen', name: 'Fen Bilimleri (LGS)', icon: '🔬', topics: ['Mevsimler ve İklim', 'DNA ve Genetik Kod', 'Basınç', 'Madde ve Endüstri'], color: 'from-emerald-700 to-teal-600', progress: 65, textColor: 'text-emerald-400', playlist: [
+                    { title: 'DNA ve Genetik Kod Full Tekrar', duration: '21:15', views: '185 B' }
+                ]}
+            ]
+        };
+
+        const examsData = {
+            'Matematik': [
+                { title: '1. Dönem 1. Matematik Yazılısı', date: 'Kasım 2026', questions: 20, duration: '40 Dk' },
+                { title: 'Çarpanlar ve Katlar Tarama Testi', date: 'Kasım 2026', questions: 15, duration: '30 Dk' }
+            ],
+            'Fen Bilimleri': [
+                { title: '1. Dönem 1. Fen Bilimleri Yazılısı', date: 'Kasım 2026', questions: 20, duration: '40 Dk' }
+            ],
+            'Türkçe': [
+                { title: '1. Dönem 1. Türkçe Yazılısı', date: 'Kasım 2026', questions: 20, duration: '40 Dk' }
+            ],
+            'Sosyal Bilgiler': [
+                { title: '1. Dönem 1. Sosyal Bilgiler Yazılısı', date: 'Kasım 2026', questions: 15, duration: '30 Dk' }
+            ],
+            'İngilizce': [
+                { title: 'Unit 1-2 Practice Exam', date: 'Kasım 2026', questions: 10, duration: '20 Dk' }
+            ],
+            'Din Kültürü': [
+                { title: '1. Dönem 1. Din Kültürü Yazılısı', date: 'Kasım 2026', questions: 10, duration: '20 Dk' }
+            ]
+        };
+
+        // Oturum ve Bulut Senkronizasyonu
+        async function initAuth() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.error("Bulut Oturum Hatası:", err);
+            }
+
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    currentUser = user;
+                    listenUserData(user.uid);
+                }
+            });
+        }
+
+        function listenUserData(userId) {
+            const userRef = doc(db, 'artifacts', appId, 'users', userId, 'profile', 'data');
+            onSnapshot(userRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.data();
+                    currentGrade = data.grade || '6. Sınıf';
+                    currentAvatar = data.avatar || '🐼';
+                    lastStreakDate = data.lastStreakDate || '';
+
+                    document.getElementById('welcome-username').innerText = (data.username || 'Yağız') + '.';
+                    document.getElementById('display-grade').innerText = currentGrade;
+                    document.getElementById('courses-title-grade').innerText = currentGrade + ' Müfredatı';
+                    document.getElementById('sidebar-username').innerText = data.username || 'Yağız';
+                    document.getElementById('sidebar-grade-text').innerText = currentGrade;
+                    document.getElementById('streak-count').innerText = data.streak || 5;
+                    document.getElementById('user-avatar-badge').innerText = currentAvatar;
+                    document.getElementById('settings-avatar-preview').innerText = currentAvatar;
+                    document.getElementById('settings-username-input').value = data.username || 'Yağız';
+                    document.getElementById('settings-grade-input').value = currentGrade;
+
+                    const today = new Date().toDateString();
+                    if (lastStreakDate === today) {
+                        const btn = document.getElementById('streak-plus-btn');
+                        if (btn) {
+                            btn.innerText = 'Bugün Alındı ✓';
+                            btn.classList.add('opacity-50', 'cursor-not-allowed');
+                        }
+                    }
+
+                    document.getElementById('auth-modal').classList.add('hidden');
+                    renderCourses(currentGrade);
+                    renderExams('Matematik');
+                } else {
+                    document.getElementById('auth-modal').classList.remove('hidden');
+                }
+            }, (error) => {
+                console.error("Bulut Veri Dinleme Hatası:", error);
+            });
+        }
+
+        window.goToStep2 = function() {
+            const usernameInput = document.getElementById('username-input');
+            if (usernameInput && !usernameInput.value.trim()) {
+                showCustomMessage('Lütfen adını gir!');
+                return;
+            }
+            document.getElementById('step-1').classList.add('hidden');
+            document.getElementById('step-2').classList.remove('hidden');
+            document.getElementById('auth-subtitle').innerText = '2. Adım: Tema tercihini yap ve platforma katıl.';
+        };
+
+        window.goToStep1 = function() {
+            document.getElementById('step-2').classList.add('hidden');
+            document.getElementById('step-1').classList.remove('hidden');
+            document.getElementById('auth-subtitle').innerText = '1. Adım: Bilgilerini gir ve devam et.';
+        };
+
+        window.handleAuthSubmit = async function(event) {
+            event.preventDefault();
+            if (!currentUser) return;
+            const username = document.getElementById('username-input').value.trim() || 'Yağız';
+            currentGrade = document.getElementById('grade-input').value;
+
+            const userRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'data');
+            await setDoc(userRef, {
+                username: username,
+                grade: currentGrade,
+                streak: 5,
+                avatar: '🐼',
+                lastStreakDate: ''
+            }, { merge: true });
+
+            document.getElementById('auth-modal').classList.add('hidden');
+        };
+
+        window.switchView = function(viewName) {
+            const views = ['home', 'courses', 'calendar', 'exams', 'settings', 'ai'];
+            views.forEach(v => {
+                const el = document.getElementById(`view-${v}`);
+                if (el) el.classList.add('hidden');
+                const btn = document.getElementById(`nav-${v}-btn`);
+                if (btn) {
+                    btn.classList.remove('text-fuchsia-400', 'bg-purple-950/60', 'border', 'border-purple-800/40');
+                    btn.classList.add('text-purple-300/70');
+                }
+            });
+
+            const targetView = document.getElementById(`view-${viewName}`);
+            if (targetView) targetView.classList.remove('hidden');
+
+            const activeBtn = document.getElementById(`nav-${viewName}-btn`);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-purple-300/70');
+                activeBtn.classList.add('text-fuchsia-400', 'bg-purple-950/60', 'border', 'border-purple-800/40');
+            }
+        };
+
+        window.sendAIPrompt = async function() {
+            const input = document.getElementById('ai-prompt-input');
+            const container = document.getElementById('ai-chat-messages');
+            if (!input || !input.value.trim()) return;
+
+            const userText = input.value.trim();
+            input.value = '';
+
+            // Kullanıcı mesajını ekle
+            const userMsgDiv = document.createElement('div');
+            userMsgDiv.className = "flex items-start gap-3 justify-end";
+            userMsgDiv.innerHTML = `
+                <div class="bg-gradient-to-r from-purple-600 to-fuchsia-600 rounded-2xl p-4 max-w-xl text-xs md:text-sm text-white font-medium shadow-md">
+                    ${userText}
+                </div>
+                <div class="w-9 h-9 rounded-xl bg-purple-950 border border-purple-800 flex items-center justify-center text-base shadow-md flex-shrink-0">${currentAvatar}</div>
+            `;
+            container.appendChild(userMsgDiv);
+            container.scrollTop = container.scrollHeight;
+
+            // Yapay Zeka Yükleniyor Balonu
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = 'ai-loading-bubble';
+            loadingDiv.className = "flex items-start gap-3";
+            loadingDiv.innerHTML = `
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 to-fuchsia-500 flex items-center justify-center text-white text-base font-bold shadow-md flex-shrink-0 animate-pulse">🤖</div>
+                <div class="bg-[#130B1A] border border-purple-800/50 rounded-2xl p-4 text-xs md:text-sm text-purple-300 animate-pulse">
+                    Google AI düşünüyor...
+                </div>
+            `;
+            container.appendChild(loadingDiv);
+            container.scrollTop = container.scrollHeight;
+
+            try {
+                const systemPrompt = "Sen AKSİYON eğitim platformunun uzman bir yapay zeka eğitim koçusun. Ortaokul ve LGS öğrencilerine samimi, motive edici, net ve derslerinde yardımcı olacak şekilde Türkçe yanıtlar ver.";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=`;
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: userText }] }],
+                        systemInstruction: { parts: [{ text: systemPrompt }] }
+                    })
+                });
+
+                const result = await response.json();
+                const aiText = result.candidates?.[0]?.content?.parts?.[0]?.text || "Üzgünüm, şu an yanıt oluşturamadım.";
+
+                document.getElementById('ai-loading-bubble')?.remove();
+
+                const aiMsgDiv = document.createElement('div');
+                aiMsgDiv.className = "flex items-start gap-3";
+                aiMsgDiv.innerHTML = `
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-600 to-fuchsia-500 flex items-center justify-center text-white text-base font-bold shadow-md flex-shrink-0">🤖</div>
+                    <div class="bg-[#130B1A] border border-purple-800/50 rounded-2xl p-4 max-w-xl text-xs md:text-sm text-purple-100 leading-relaxed shadow-inner whitespace-pre-wrap">
+                        ${aiText}
+                    </div>
+                `;
+                container.appendChild(aiMsgDiv);
+                container.scrollTop = container.scrollHeight;
+
+            } catch (err) {
+                document.getElementById('ai-loading-bubble')?.remove();
+                showCustomMessage("AI bağlantı hatası: " + err.message);
+            }
+        };
+
+        window.renderCourses = function(grade) {
+            const grid = document.getElementById('courses-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            const list = classCourses[grade] || classCourses['6. Sınıf'];
+            list.forEach(course => {
+                const card = document.createElement('div');
+                card.className = "bg-[#170E21] border border-purple-900/40 rounded-3xl p-5 hover:border-purple-500/50 transition-all hover:-translate-y-1 cursor-pointer flex flex-col justify-between space-y-4 shadow-lg";
+                card.onclick = () => openCourseModal(course.id);
+
+                card.innerHTML = `
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr ${course.color} flex items-center justify-center text-2xl shadow-lg">
+                                ${course.icon}
+                            </div>
+                            <span class="text-xs font-black ${course.textColor} bg-purple-950/80 border border-purple-800/40 px-3 py-1 rounded-full">%${course.progress} Tamamlandı</span>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-black text-white">${course.name}</h3>
+                            <p class="text-xs text-purple-300/70 font-medium">${course.topics.length} Ana Ünite / Konu Kampı</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2 pt-2 border-t border-purple-900/40">
+                        <div class="w-full bg-purple-950 h-2 rounded-full overflow-hidden">
+                            <div class="bg-gradient-to-r from-purple-500 to-fuchsia-500 h-full rounded-full" style="width: ${course.progress}%"></div>
+                        </div>
+                        <button class="w-full py-2.5 rounded-xl bg-purple-900/40 hover:bg-purple-800/50 text-white font-bold text-xs transition-colors flex items-center justify-center gap-2">
+                            <span>Dersi İncele & Video İzle</span> ➔
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        };
+
+        window.openCourseModal = function(courseId) {
+            currentActiveCourseId = courseId;
+            const courses = classCourses[currentGrade] || classCourses['6. Sınıf'];
+            const course = courses.find(c => c.id === courseId);
+            if (!course) return;
+
+            document.getElementById('modal-course-icon').innerText = course.icon;
+            document.getElementById('modal-course-title').innerText = course.name;
+            document.getElementById('custom-video-bg-icon').innerText = course.icon;
+            document.getElementById('custom-video-title-display').innerText = `${course.name} - ${course.topics[0] || '1. Ünite'}`;
+
+            const topicsList = document.getElementById('modal-topics-list');
+            if (topicsList) {
+                topicsList.innerHTML = course.topics.map((t, idx) => `
+                    <div class="p-2.5 rounded-xl bg-[#170E21] border border-purple-900/40 flex items-center justify-between">
+                        <span class="font-bold text-white">${idx + 1}. ${t}</span>
+                        <span class="text-[10px] text-emerald-400 font-extrabold bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-800/40">Aktif</span>
+                    </div>
+                `).join('');
+            }
+
+            const playlist = document.getElementById('modal-video-playlist');
+            if (playlist) {
+                playlist.innerHTML = (course.playlist || []).map(vid => `
+                    <div class="p-2.5 rounded-xl bg-[#170E21] border border-purple-900/40 hover:border-purple-500/40 transition-all flex items-center justify-between cursor-pointer" onclick="document.getElementById('custom-video-title-display').innerText='${course.name} - ${vid.title}'">
+                        <div class="overflow-hidden pr-2">
+                            <p class="font-bold text-white text-xs truncate">${vid.title}</p>
+                            <p class="text-[10px] text-purple-300/60">${vid.views} görüntüleme • ${vid.duration}</p>
+                        </div>
+                        <span class="text-fuchsia-400 text-sm font-black flex-shrink-0">▶</span>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('course-modal').classList.remove('hidden');
+        };
+
+        window.renderExams = function(subject) {
+            const container = document.getElementById('exams-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const list = examsData[subject] || [];
+            if (list.length === 0) {
+                container.innerHTML = `<p class="text-xs text-purple-300/60 col-span-2">Bu ders için hazırlanmış sınav kağıdı bulunamadı.</p>`;
+                return;
+            }
+
+            list.forEach(exam => {
+                const card = document.createElement('div');
+                card.className = "bg-[#170E21] border border-purple-900/40 rounded-3xl p-5 space-y-4 shadow-lg";
+                card.innerHTML = `
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <span class="text-[10px] font-black text-fuchsia-400 uppercase tracking-wider">${subject} Yazılısı</span>
+                            <h3 class="text-base font-black text-white mt-1">${exam.title}</h3>
+                        </div>
+                        <span class="px-2.5 py-1 rounded-lg bg-purple-950 text-purple-300 font-bold text-xs border border-purple-800/50">${exam.duration}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-purple-300/70 border-t border-b border-purple-900/40 py-2.5">
+                        <span>❓ Soru Sayısı: <strong class="text-white">${exam.questions} Soru</strong></span>
+                        <span>📅 Tarih: <strong class="text-white">${exam.date}</strong></span>
+                    </div>
+                    <button type="button" onclick="alert('${exam.title} indirme/çözüm ekranı yakında açılacak!')" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white font-extrabold text-xs shadow-md cursor-pointer">
+                        Sınavı Başlat / İndir 📄
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        };
+
+        window.filterExamSubject = function(subj) {
+            const buttons = document.querySelectorAll('.exam-tab-btn');
+            buttons.forEach(b => {
+                b.className = 'exam-tab-btn px-4 py-2 rounded-xl bg-[#1A1025] text-purple-300 font-bold text-xs border border-purple-900/60 whitespace-nowrap cursor-pointer';
+            });
+            const activeBtn = document.getElementById(`exam-tab-${subj}`);
+            if (activeBtn) {
+                activeBtn.className = 'exam-tab-btn px-4 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white font-extrabold text-xs shadow-md whitespace-nowrap cursor-pointer';
+            }
+            renderExams(subj);
+        };
+
+        function formatTime(sec) {
+            const m = Math.floor(sec / 60);
+            const s = Math.floor(sec % 60);
+            return (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+        }
+
+        function updateVideoTimeDisplay() {
+            const currentStr = formatTime(currentSeconds);
+            const totalStr = formatTime(totalSeconds);
+            const el = document.getElementById('video-time-indicator');
+            if (el) el.innerText = `${currentStr} / ${totalStr}`;
+            
+            const pct = (currentSeconds / totalSeconds) * 100;
+            const bar = document.getElementById('video-progress-bar');
+            if (bar) bar.style.width = pct + '%';
+        }
+
+        window.togglePlayPause = function() {
+            isPlaying = !isPlaying;
+            const btn = document.getElementById('play-pause-btn');
+            if (btn) btn.innerText = isPlaying ? '⏸' : '▶';
+        };
+
+        window.skipVideo = function(seconds) {
+            currentSeconds = Math.max(0, Math.min(totalSeconds, currentSeconds + seconds));
+            updateVideoTimeDisplay();
+        };
+
+        window.toggleMute = function() {
+            isMuted = !isMuted;
+            const btn = document.getElementById('mute-btn');
+            if (btn) btn.classList.toggle('text-rose-400', isMuted);
+        };
+
+        window.cyclePlaybackRate = function() {
+            const speeds = [1, 1.25, 1.5, 2];
+            const idx = speeds.indexOf(playbackSpeed);
+            playbackSpeed = speeds[(idx + 1) % speeds.length];
+            const btn = document.getElementById('speed-btn');
+            if (btn) btn.innerText = playbackSpeed + 'x';
+        };
+
+        window.seekVideo = function(event) {
+            const rect = event.currentTarget.getBoundingClientRect();
+            const pos = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+            currentSeconds = Math.round(pos * totalSeconds);
+            updateVideoTimeDisplay();
+        };
+
+        window.toggleCustomFullscreen = function() {
+            const container = document.getElementById('custom-video-container');
+            if (!document.fullscreenElement) {
+                container.requestFullscreen().catch(err => {
+                    showCustomMessage("Tam ekran modu başlatılamadı: " + err.message);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        };
+
+        // Özel Güvenli Mesaj Kutusu (alert yerine)
+        function showCustomMessage(text) {
+            const existingModal = document.getElementById('custom-msg-modal');
+            if (existingModal) existingModal.remove();
+
+            const modal = document.createElement('div');
+            modal.id = 'custom-msg-modal';
+            modal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4';
+            modal.innerHTML = `
+                <div class="bg-[#160D20] border border-purple-500/40 rounded-3xl p-6 max-w-sm w-full text-center space-y-4 shadow-2xl animate-in fade-in zoom-in duration-200">
+                    <div class="w-12 h-12 bg-purple-600/30 border border-purple-500/50 rounded-2xl mx-auto flex items-center justify-center text-fuchsia-400 text-xl font-bold">ℹ️</div>
+                    <p class="text-sm font-semibold text-white">${text}</p>
+                    <button onclick="document.getElementById('custom-msg-modal').remove()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white font-bold text-xs shadow-lg shadow-purple-600/30 cursor-pointer">Tamam</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        window.renderExams = function(subject) {
+            const container = document.getElementById('exams-container');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const list = examsData[subject] || [];
+            if (list.length === 0) {
+                container.innerHTML = `<p class="text-xs text-purple-300/60 col-span-2">Bu ders için hazırlanmış sınav kağıdı bulunamadı.</p>`;
+                return;
+            }
+
+            list.forEach(exam => {
+                const card = document.createElement('div');
+                card.className = "bg-[#170E21] border border-purple-900/40 rounded-3xl p-5 space-y-4 shadow-lg";
+                card.innerHTML = `
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <span class="text-[10px] font-black text-fuchsia-400 uppercase tracking-wider">${subject} Yazılısı</span>
+                            <h3 class="text-base font-black text-white mt-1">${exam.title}</h3>
+                        </div>
+                        <span class="px-2.5 py-1 rounded-lg bg-purple-950 text-purple-300 font-bold text-xs border border-purple-800/50">${exam.duration}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs text-purple-300/70 border-t border-b border-purple-900/40 py-2.5">
+                        <span>❓ Soru Sayısı: <strong class="text-white">${exam.questions} Soru</strong></span>
+                        <span>📅 Tarih: <strong class="text-white">${exam.date}</strong></span>
+                    </div>
+                    <button type="button" onclick="showCustomMessage('${exam.title} indirme/çözüm ekranı yakında açılacak!')" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white font-extrabold text-xs shadow-md cursor-pointer">
+                        Sınavı Başlat / İndir 📄
+                    </button>
+                `;
+                container.appendChild(card);
+            });
+        };
+
+        window.saveSettingsProfile = async function() {
+            if (!currentUser) return;
+            const username = document.getElementById('settings-username-input').value.trim() || 'Yağız';
+            currentGrade = document.getElementById('settings-grade-input').value;
+
+            const userRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'data');
+            await setDoc(userRef, {
+                username: username,
+                grade: currentGrade,
+                avatar: currentAvatar
+            }, { merge: true });
+
+            showCustomMessage('Ayarlar bulut veritabanına başarıyla kaydedildi! ☁️');
+        };
+
+        window.increaseStreak = async function() {
+            if (!currentUser) return;
+            const today = new Date().toDateString();
+            if (lastStreakDate === today) {
+                showCustomMessage('Bugün zaten seri ödülünü aldın! Yarın tekrar dene 🔥');
+                return;
+            }
+
+            const el = document.getElementById('streak-count');
+            const currentStreak = parseInt(el ? el.innerText : '5') + 1;
+            
+            const userRef = doc(db, 'artifacts', appId, 'users', currentUser.uid, 'profile', 'data');
+            await updateDoc(userRef, {
+                streak: currentStreak,
+                lastStreakDate: today
+            });
+
+            showCustomMessage('Tebrikler! Günlük seri serine +1 eklendi ve buluta kaydedildi 🔥');
+        };
+
+        initAuth();
+    </script>
+</body>
+</html>
